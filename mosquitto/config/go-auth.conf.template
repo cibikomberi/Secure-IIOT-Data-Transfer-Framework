@@ -1,0 +1,9 @@
+auth_opt_mongo_host ${MONGO_HOST}
+auth_opt_mongo_port ${MONGO_PORT}
+auth_opt_mongo_db ${MONGO_DB}
+auth_opt_mongo_users ${MONGO_USERS_COLLECTION}
+auth_opt_mongo_acls ${MONGO_ACLS_COLLECTION}
+
+auth_opt_mongo_userquery { "username": "%u", "enabled": true }
+auth_opt_mongo_superquery { "username": "%u", "superuser": true }
+auth_opt_mongo_aclquery { "username": "%u" }
