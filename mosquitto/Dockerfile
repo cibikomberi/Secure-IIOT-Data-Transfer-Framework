@@ -23,7 +23,6 @@ RUN curl -L \
 
 # Copy configs
 COPY config/mosquitto.conf.template /mosquitto/config/mosquitto.conf.template
-COPY config/go-auth.conf.template /mosquitto/config/go-auth.conf.template
 COPY entrypoint.sh /entrypoint.sh
 
 RUN chmod +x /entrypoint.sh
