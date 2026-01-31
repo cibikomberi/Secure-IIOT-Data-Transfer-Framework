@@ -1,0 +1,53 @@
+version: "3.7"
+
+networks:
+  iiot-net:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.30.0.0/24
+
+services:
+  mongo:
+    image: mongo:latest
+    container_name: mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - ./data/mongo:/data/db
+    environment:
+      MONGO_INITDB_DATABASE: mqtt
+    networks:
+      iiot-net:
+        ipv4_address: 172.30.0.10
+
+  broker:
+    build: ./mosquitto
+    container_name: mqtt-broker
+    ports:
+      - "1883:1883"
+      - "9001:9001"
+    environment:
+      MONGO_HOST: 172.30.0.10   # ← static IP
+      MONGO_PORT: 27017
+      MONGO_DB: mqtt
+      MONGO_USERS_COLLECTION: users
+      MONGO_ACLS_COLLECTION: acls
+    volumes:
+      - ./data/mosquitto:/mosquitto/data
+    depends_on:
+      - mongo
+    networks:
+      iiot-net:
+        ipv4_address: 172.30.0.20
+
+  app:
+    build: .
+    container_name: iot-data-transfer-app
+    ports:
+      - "3000:3000"
+    depends_on:
+      - broker
+    networks:
+      iiot-net:
+        ipv4_address: 172.30.0.30

@@ -1,0 +1,50 @@
+# =====================
+# Core settings
+# =====================
+persistence true
+persistence_location /mosquitto/data
+
+allow_anonymous false
+log_type error
+log_type warning
+log_type notice
+log_type information
+log_type debug
+
+# =====================
+# Listeners
+# =====================
+listener 1883
+listener 9001
+protocol websockets
+
+# =====================
+# Dynamic Security
+# Built-in plugin (default image)
+# =====================
+auth_plugin /mosquitto/auth/go-auth.so
+
+auth_opt_use_clientid_as_username true
+auth_opt_hasher bcrypt
+auth_opt_backends mongo
+use_username_as_clientid true
+# sys_tree true
+
+auth_opt_cache true
+auth_opt_cache_reset true
+auth_opt_cache_refresh true
+
+auth_opt_auth_cache_seconds 5
+auth_opt_acl_cache_seconds 5
+auth_opt_auth_jitter_seconds 1
+auth_opt_acl_jitter_seconds 1
+
+auth_opt_mongo_host ${MONGO_HOST}
+auth_opt_mongo_port ${MONGO_PORT}
+auth_opt_mongo_db ${MONGO_DB}
+auth_opt_mongo_users ${MONGO_USERS_COLLECTION}
+auth_opt_mongo_acls ${MONGO_ACLS_COLLECTION}
+
+auth_opt_mongo_userquery { "username": "%u", "enabled": true }
+auth_opt_mongo_superquery { "username": "%u", "superuser": true }
+auth_opt_mongo_aclquery { "username": "%u" }
